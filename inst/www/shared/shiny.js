@@ -657,32 +657,35 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.inputRatePolicies = {};
   };
   (function () {
-    this.setInput = function (name, value, opts) {
-      var input = splitInputNameType(name);
+    this.setInput = function (name_type, value, opts) {
+      var _splitInputNameType3 = splitInputNameType(name_type);
 
-      this.$ensureInit(input.name);
+      var inputName = _splitInputNameType3.name;
 
-      if (opts.priority !== "deferred") this.inputRatePolicies[input.name].immediateCall(name, value, opts);else this.inputRatePolicies[input.name].normalCall(name, value, opts);
+
+      this.$ensureInit(inputName);
+
+      if (opts.priority !== "deferred") this.inputRatePolicies[inputName].immediateCall(name_type, value, opts);else this.inputRatePolicies[inputName].normalCall(name_type, value, opts);
     };
-    this.setRatePolicy = function (name, mode, millis) {
-      var input = splitInputNameType(name);
+    this.setRatePolicy = function (name_type, mode, millis) {
+      var _splitInputNameType4 = splitInputNameType(name_type);
+
+      var inputName = _splitInputNameType4.name;
+
 
       if (mode === 'direct') {
-        this.inputRatePolicies[input.name] = new Invoker(this, this.$doSetInput);
+        this.inputRatePolicies[inputName] = new Invoker(this, this.$doSetInput);
       } else if (mode === 'debounce') {
-        this.inputRatePolicies[input.name] = new Debouncer(this, this.$doSetInput, millis);
+        this.inputRatePolicies[inputName] = new Debouncer(this, this.$doSetInput, millis);
       } else if (mode === 'throttle') {
-        this.inputRatePolicies[input.name] = new Throttler(this, this.$doSetInput, millis);
+        this.inputRatePolicies[inputName] = new Throttler(this, this.$doSetInput, millis);
       }
     };
     this.$ensureInit = function (name) {
-      var input = splitInputNameType(name);
-
-      if (!(input.name in this.inputRatePolicies)) this.setRatePolicy(input.name, 'direct');
+      if (!(name in this.inputRatePolicies)) this.setRatePolicy(name, 'direct');
     };
     this.$doSetInput = function (name, value, opts) {
-      var input = splitInputNameType(name);
-      this.target.setInput(input.name, value, opts);
+      this.target.setInput(name, value, opts);
     };
   }).call(InputRateDecorator.prototype);
 
