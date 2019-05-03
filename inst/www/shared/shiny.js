@@ -545,8 +545,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.lastChanceCallback = [];
   };
   (function () {
-    this.setInput = function (name, value, opts) {
-      this.pendingData[name] = value;
+    this.setInput = function (name_type, value, opts) {
+      this.pendingData[name_type] = value;
 
       if (!this.reentrant) {
         if (opts.priority === "event") {
@@ -582,8 +582,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.lastSentValues = this.reset(initialValues);
   };
   (function () {
-    this.setInput = function (name, value, opts) {
-      var _splitInputNameType = splitInputNameType(name);
+    this.setInput = function (name_type, value, opts) {
+      var _splitInputNameType = splitInputNameType(name_type);
 
       var inputName = _splitInputNameType.name;
       var inputType = _splitInputNameType.inputType;
@@ -610,10 +610,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         if (values.hasOwnProperty(inputName)) {
           var _splitInputNameType2 = splitInputNameType(inputName);
 
-          var name = _splitInputNameType2.name;
+          var _name = _splitInputNameType2.name;
           var inputType = _splitInputNameType2.inputType;
 
-          cacheValues[name] = {
+          cacheValues[_name] = {
             jsonValue: JSON.stringify(values[inputName]),
             inputType: inputType
           };
@@ -628,10 +628,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.target = target;
   };
   (function () {
-    this.setInput = function (name, value, opts) {
+    this.setInput = function (name_type, value, opts) {
       var evt = jQuery.Event("shiny:inputchanged");
 
-      var input = splitInputNameType(name);
+      var input = splitInputNameType(name_type);
       evt.name = input.name;
       evt.inputType = input.inputType;
       evt.value = value;
@@ -694,8 +694,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.pendingInput = {};
   };
   (function () {
-    this.setInput = function (name, value, opts) {
-      if (/^\./.test(name)) this.target.setInput(name, value, opts);else this.pendingInput[name] = { value: value, opts: opts };
+    this.setInput = function (name_type, value, opts) {
+      if (/^\./.test(name_type)) this.target.setInput(name_type, value, opts);else this.pendingInput[name] = { value: value, opts: opts };
     };
     this.submit = function () {
       for (var name in this.pendingInput) {
@@ -711,12 +711,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.target = target;
   };
   (function () {
-    this.setInput = function (name, value, opts) {
-      if (!name) throw "Can't set input with empty name.";
+    this.setInput = function (name_type, value, opts) {
+      if (!name_type) throw "Can't set input with empty name.";
 
       opts = addDefaultInputOpts(opts);
 
-      this.target.setInput(name, value, opts);
+      this.target.setInput(name_type, value, opts);
     };
   }).call(InputValidateDecorator.prototype);
 
@@ -743,8 +743,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return opts;
   }
 
-  function splitInputNameType(name) {
-    var name2 = name.split(':');
+  function splitInputNameType(name_type) {
+    var name2 = name_type.split(':');
     return {
       name: name2[0],
       inputType: name2.length > 1 ? name2[1] : ''
