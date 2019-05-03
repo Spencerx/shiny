@@ -545,8 +545,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.lastChanceCallback = [];
   };
   (function () {
-    this.setInput = function (name_type, value, opts) {
-      this.pendingData[name_type] = value;
+    this.setInput = function (nameType, value, opts) {
+      this.pendingData[nameType] = value;
 
       if (!this.reentrant) {
         if (opts.priority === "event") {
@@ -582,8 +582,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.lastSentValues = this.reset(initialValues);
   };
   (function () {
-    this.setInput = function (name_type, value, opts) {
-      var _splitInputNameType = splitInputNameType(name_type);
+    this.setInput = function (nameType, value, opts) {
+      var _splitInputNameType = splitInputNameType(nameType);
 
       var inputName = _splitInputNameType.name;
       var inputType = _splitInputNameType.inputType;
@@ -628,10 +628,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.target = target;
   };
   (function () {
-    this.setInput = function (name_type, value, opts) {
+    this.setInput = function (nameType, value, opts) {
       var evt = jQuery.Event("shiny:inputchanged");
 
-      var input = splitInputNameType(name_type);
+      var input = splitInputNameType(nameType);
       evt.name = input.name;
       evt.inputType = input.inputType;
       evt.value = value;
@@ -657,12 +657,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.inputRatePolicies = {};
   };
   (function () {
-    // Note the 'public' methods setInput() and setRatePolicy() are passed
-    // both the input name (i.e., inputId) and the input type (i.e., the
-    // result of InputBinding.getType()). However, the 'private' methods
-    // are passed just the input name (i.e., inputId).
-    this.setInput = function (name_type, value, opts) {
-      var _splitInputNameType3 = splitInputNameType(name_type);
+    // Note that the first argument of setInput() and setRatePolicy()
+    // are passed both the input name (i.e., inputId) and type.
+    // https://github.com/rstudio/shiny/blob/67d3a/srcjs/init_shiny.js#L111-L126
+    // However, $ensureInit() and $doSetInput() are meant to be passed just
+    // the input name (i.e., inputId), which is why we distinguish between
+    // nameType and name.
+    this.setInput = function (nameType, value, opts) {
+      var _splitInputNameType3 = splitInputNameType(nameType);
 
       var inputName = _splitInputNameType3.name;
 
@@ -671,8 +673,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (opts.priority !== "deferred") this.inputRatePolicies[inputName].immediateCall(inputName, value, opts);else this.inputRatePolicies[inputName].normalCall(inputName, value, opts);
     };
-    this.setRatePolicy = function (name_type, mode, millis) {
-      var _splitInputNameType4 = splitInputNameType(name_type);
+    this.setRatePolicy = function (nameType, mode, millis) {
+      var _splitInputNameType4 = splitInputNameType(nameType);
 
       var inputName = _splitInputNameType4.name;
 
@@ -698,8 +700,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.pendingInput = {};
   };
   (function () {
-    this.setInput = function (name_type, value, opts) {
-      if (/^\./.test(name_type)) this.target.setInput(name_type, value, opts);else this.pendingInput[name] = { value: value, opts: opts };
+    this.setInput = function (nameType, value, opts) {
+      if (/^\./.test(nameType)) this.target.setInput(nameType, value, opts);else this.pendingInput[name] = { value: value, opts: opts };
     };
     this.submit = function () {
       for (var name in this.pendingInput) {
@@ -715,12 +717,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.target = target;
   };
   (function () {
-    this.setInput = function (name_type, value, opts) {
-      if (!name_type) throw "Can't set input with empty name.";
+    this.setInput = function (nameType, value, opts) {
+      if (!nameType) throw "Can't set input with empty name.";
 
       opts = addDefaultInputOpts(opts);
 
-      this.target.setInput(name_type, value, opts);
+      this.target.setInput(nameType, value, opts);
     };
   }).call(InputValidateDecorator.prototype);
 
@@ -747,8 +749,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return opts;
   }
 
-  function splitInputNameType(name_type) {
-    var name2 = name_type.split(':');
+  function splitInputNameType(nameType) {
+    var name2 = nameType.split(':');
     return {
       name: name2[0],
       inputType: name2.length > 1 ? name2[1] : ''
