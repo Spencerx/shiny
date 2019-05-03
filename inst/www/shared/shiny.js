@@ -657,6 +657,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.inputRatePolicies = {};
   };
   (function () {
+    // Note the 'public' methods setInput() and setRatePolicy() are passed
+    // both the input name (i.e., inputId) and the input type (i.e., the
+    // result of InputBinding.getType()). However, the 'private' methods
+    // are passed just the input name (i.e., inputId).
     this.setInput = function (name_type, value, opts) {
       var _splitInputNameType3 = splitInputNameType(name_type);
 
