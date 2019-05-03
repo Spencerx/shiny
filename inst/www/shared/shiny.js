@@ -665,7 +665,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       this.$ensureInit(inputName);
 
-      if (opts.priority !== "deferred") this.inputRatePolicies[inputName].immediateCall(name_type, value, opts);else this.inputRatePolicies[inputName].normalCall(name_type, value, opts);
+      if (opts.priority !== "deferred") this.inputRatePolicies[inputName].immediateCall(inputName, value, opts);else this.inputRatePolicies[inputName].normalCall(inputName, value, opts);
     };
     this.setRatePolicy = function (name_type, mode, millis) {
       var _splitInputNameType4 = splitInputNameType(name_type);
